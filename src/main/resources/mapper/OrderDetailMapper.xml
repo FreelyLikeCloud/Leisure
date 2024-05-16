@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gjj.springbootdemo.mapper.OrderDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.gjj.springbootdemo.entity.OrderDetail">
+            <id property="detailId" column="detail_id" jdbcType="INTEGER"/>
+            <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+            <result property="goodsName" column="goods_name" jdbcType="VARCHAR"/>
+            <result property="goodsInfo" column="goods_info" jdbcType="VARCHAR"/>
+            <result property="goodsPictures" column="goods_pictures" jdbcType="VARCHAR"/>
+            <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+            <result property="unitPrice" column="unit_price" jdbcType="DECIMAL"/>
+            <result property="totalPrice" column="total_price" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        detail_id,order_id,goods_name,
+        goods_info,goods_pictures,quantity,
+        unit_price,total_price
+    </sql>
+
+    <insert id="insertBatchOrderDetails" parameterType="list">
+        INSERT INTO order_details
+            (order_id,goods_name,goods_info,goods_pictures,quantity,unit_price,total_price)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.orderId}, #{item.goodsName}, #{item.goodsInfo},#{item.goodsPictures},#{item.quantity},#{item.unitPrice},#{item.totalPrice})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gjj.springbootdemo.mapper.CartMapper">
+
+    <resultMap id="BaseResultMap" type="com.gjj.springbootdemo.entity.Cart">
+            <id property="cartId" column="cart_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="goodsId" column="goods_id" jdbcType="INTEGER"/>
+            <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+            <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        cart_id,user_id,goods_id,
+        quantity,add_time
+    </sql>
+
+    <delete id="deleteBatchById" parameterType="list">
+        DELETE FROM Cart WHERE cart_id IN
+        <foreach item="cartId" collection="list" index="index" open="("
+                 separator="," close=")">
+            #{cartId}
+        </foreach>
+    </delete>
+</mapper>

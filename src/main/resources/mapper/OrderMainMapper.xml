@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gjj.springbootdemo.mapper.OrderMainMapper">
+
+    <resultMap id="BaseResultMap" type="com.gjj.springbootdemo.entity.OrderMain">
+            <id property="orderId" column="order_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="orderStatus" column="order_status" jdbcType="VARCHAR"/>
+            <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id,user_id,create_time,
+        order_status,total_amount
+    </sql>
+
+    <insert id="insertOrderMain" useGeneratedKeys="true" keyProperty="oid">
+        INSERT INTO order_main (uid,total_amount)
+        VALUES(#{uid},#{totalAmount})
+    </insert>
+
+    <select id="orderMainLimit" resultType="com.gjj.springbootdemo.entity.OrderMain">
+        SELECT * FROM order_main
+        <where>
+            <if test="orderMain.uid !=null">
+                AND uid = #{orderMain.uid}
+            </if>
+        </where>
+        LIMIT #{pageNum},#{pageSize}
+    </select>
+
+    <select id="orderMainTotal" resultType="integer">
+        SELECT COUNT(*) FROM order_main
+        <where>
+            <if test="orderMain.uid !=null">
+                AND uid = #{orderMain.uid}
+            </if>
+        </where>
+        LIMIT #{pageNum},#{pageSize}
+    </select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gjj.springbootdemo.mapper.GoodsMapper">
+
+    <resultMap id="BaseResultMap" type="com.gjj.springbootdemo.entity.Goods">
+            <id property="gid" column="goods_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="info" column="info" jdbcType="VARCHAR"/>
+            <result property="pictures" column="pictures" jdbcType="VARCHAR"/>
+            <result property="inventory" column="inventory" jdbcType="INTEGER"/>
+            <result property="originalPrice" column="original_price" jdbcType="DECIMAL"/>
+            <result property="currentPrice" column="current_price" jdbcType="DECIMAL"/>
+            <result property="uid" column="user_id" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        goods_id,name,info,
+        pictures,inventory,original_price,
+        current_price,user_id,goods_status,
+        create_time,update_time
+    </sql>
+
+    <select id="selectGoodsListById" parameterType="list" resultType="com.gjj.springbootdemo.entity.Goods">
+        SELECT * FROM goods WHERE gid IN
+        <foreach item="goodsId" collection="list" index="index" open="("
+                 separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </select>
+
+    <update id="updateBatchGoodsStatusById" >
+        UPDATE Goods set status = #{goodsStatus} WHERE gid IN
+        <foreach item="goodsId" collection="list" index="index" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </update>
+
+    <select id="goodsLimit" resultType="com.gjj.springbootdemo.entity.Goods">
+        SELECT * FROM goods
+        <where>
+            <if test="goods.name !=null and goods.name !=''">
+                AND name LIKE COUCAT('%',#{goods.name},'%')
+            </if>
+            <if test="goods.uid !=null">
+                AND uid = #{goods.uid}
+            </if>
+            <if test="goods.status !=null">
+                AND status = #{goods.status}
+            </if>
+        </where>
+        LIMIT #{pageNum},#{pageSize}
+    </select>
+
+    <select id="goodsTotal" resultType="integer">
+        SELECT COUNT(*) FROM goods
+        <where>
+            <if test="goods.name !=null and goods.name !=''">
+                AND name LIKE COUCAT('%',#{goods.name},'%')
+            </if>
+            <if test="goods.uid !=null">
+                AND uid = #{goods.uid}
+            </if>
+            <if test="goods.status !=null">
+                AND status = #{goods.status}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteBatchById" parameterType="list">
+        DELETE FROM Goods WHERE gid IN
+        <foreach item="goodsId" collection="list" index="index" open="("
+                 separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+</mapper>
